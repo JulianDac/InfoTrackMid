@@ -54,71 +54,71 @@ There is a Dockerfile.
 
 ## Instructions on the endpoints to contact
 1. Get Available Slots
-Endpoint: GET /booking/available-slots
-Description: Retrieves a list of available time slots for bookings.
-Response:
-200 OK: Returns a list of available time slots.
-500 Internal Server Error: An error occurred while processing the request.
+- **Endpoint**: GET /booking/available-slots
+- **Description**: Retrieves a list of available time slots for bookings.
+- **Response**:
+- **200 OK**: Returns a list of available time slots.
+- **500 Internal Server Error**: An error occurred while processing the request.
 ```bash
 curl -X GET "https://localhost:5000/booking/available-slots"
 ```
 
 2. Get Booking by Name
-Endpoint: GET /booking/{name}
-Description: Retrieves the booking details for a specific user by name.
-Parameters:
-name (string): The name of the user whose booking details are to be retrieved.
-Response:
-200 OK: Returns the booking details for the specified user.
-404 Not Found: No booking found for the specified user.
-500 Internal Server Error: An error occurred while processing the request.
+- **Endpoint**: GET /booking/{name}
+- **Description**: Retrieves the booking details for a specific user by name.
+- **Parameters**:
+- **name (string)**: The name of the user whose booking details are to be retrieved.
+- **Response**:
+- **200 OK**: Returns the booking details for the specified user.
+- **404 Not Found**: No booking found for the specified user.
+- **500 Internal Server Error**: An error occurred while processing the request.
  ```bash
 curl -X GET "https://localhost:5000/booking/Alice"
 ```
 
 3. Create Booking
-Endpoint: POST /booking
-Description: Creates a new booking.
-Request Body:
-BookingRequest (JSON):
-name (string): The name of the user making the booking.
-bookingTime (string): The desired booking time in the format "HH:mm".
-Response:
-200 OK: Returns the booking ID of the newly created booking.
-400 Bad Request: Validation errors or invalid input.
-409 Conflict: A booking already exists for the specified user or no available slots for the requested time.
-500 Internal Server Error: An error occurred while processing the request.
+- **Endpoint**: POST /booking
+- **Description**: Creates a new booking.
+- **Request Body**:
+- **BookingRequest (JSON)**:
+- **name (string)**: The name of the user making the booking.
+- **bookingTime (string)**: The desired booking time in the format "HH:mm".
+- **Response**:
+- **200 OK**: Returns the booking ID of the newly created booking.
+- **400 Bad Request**: Validation errors or invalid input.
+- **409 Conflict**: A booking already exists for the specified user or no available slots for the requested time.
+- **500 Internal Server Error**: An error occurred while processing the request.
  ```bash
 curl -X POST "https://localhost:5000/booking" -H "Content-Type: application/json" -d '{"name": "Alice", "bookingTime": "09:00"}'
 ```
 
 4. Amend Booking
-Endpoint: PUT /booking/{name}
-Description: Amends an existing booking for a specific user by name.
-Parameters:
-name (string): The name of the user whose booking is to be amended.
-Request Body:
-BookingRequest (JSON):
-bookingTime (string): The new desired booking time in the format "HH:mm".
-Response:
-200 OK: Returns the booking ID of the amended booking.
-400 Bad Request: Validation errors or invalid input.
-404 Not Found: No booking found for the specified user.
-409 Conflict: No available slots for the requested time.
-500 Internal Server Error: An error occurred while processing the request
+- **Endpoint**: PUT /booking/{name}
+- **Description**: Amends an existing booking for a specific user by name.
+- **Parameters**:
+- **name (string)**: The name of the user whose booking is to be amended.
+- **Request Body**:
+- **BookingRequest (JSON)**:
+- **bookingTime (string)**: The new desired booking time in the format "HH:mm".
+- **Response**:
+- **200 OK**: Returns the booking ID of the amended booking.
+- **400 Bad Request**: Validation errors or invalid input.
+- **404 Not Found**: No booking found for the specified user.
+- **409 Conflict**: No available slots for the requested time.
+- **500 Internal Server Error**: An error occurred while processing the request
 ```bash
 curl -X POST "https://localhost:5000" -H "Content-Type: application/json" -d '{"name": "Alice", "bookingTime": "09:00"}'
 ```
 
 5. Delete Booking
-Endpoint: DELETE /booking/{name}
-Description: Deletes an existing booking for a specific user by name.
-Parameters:
-name (string): The name of the user whose booking is to be deleted.
-Response:
-204 No Content: The booking was successfully deleted.
-404 Not Found: No booking found for the specified user.
-500 Internal Server Error: An error occurred while processing the request.
+- **Endpoint**: DELETE /booking/{name}
+- **Description**: Deletes an existing booking for a specific user by name.
+- **Parameters**:
+- **name (string)**: The name of the user whose booking is to be deleted.
+- **Response**:
+- **204 No Content**: The booking was successfully deleted.
+- **404 Not Found**: No booking found for the specified user.
+- **500 Internal Server Error**: An error occurred while processing the request.
 ```bash
 curl -X DELETE "https://localhost:5000/booking/Alice"
 ```
