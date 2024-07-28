@@ -1,6 +1,5 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SettlementServiceWebAPI.Data;
@@ -44,9 +43,11 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
+// Register the in-memory booking store
+builder.Services.AddSingleton<InMemoryBookingStore>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddValidatorsFromAssemblyContaining<BookingRequestValidator>();
+
 
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddValidatorsFromAssemblyContaining<BookingRequestValidator>();
@@ -69,13 +70,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
-
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
-//    var context = services.GetRequiredService<ApplicationDbContext>();
-//    context.Database.Migrate();
-//}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using SettlementServiceWebAPI.Data;
 using SettlementServiceWebAPI.Models;
 
@@ -7,14 +6,14 @@ namespace SettlementServiceWebAPI.Services
 {
     public class BookingService : IBookingService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly InMemoryBookingStore _store;
         private readonly IValidator<BookingRequest> _validator;
         private const int MAX_CONCURRENT_BOOKINGS = 4;
         private const int BOOKING_DURATION_HOURS = 1;
 
-        public BookingService(ApplicationDbContext context, IValidator<BookingRequest> validator)
+        public BookingService(InMemoryBookingStore store, IValidator<BookingRequest> validator)
         {
-            _context = context;
+            _store = store;
             _validator = validator;
         }
 
@@ -22,12 +21,12 @@ namespace SettlementServiceWebAPI.Services
         {
             var slots = new List<TimeSlot>();
             var startTime = new TimeOnly(9, 0);
-            var endTime = new TimeOnly(16, 0);
+            var endTime = new TimeOnly(17, 0);
 
             while (startTime < endTime)
             {
-                var bookingsCount = await _context.Bookings
-                    .CountAsync(b => b.BookingTime == startTime);
+                var bookingsCount = _store.Bookings
+                    .Count(b => b.BookingTime == startTime);
 
                 slots.Add(new TimeSlot
                 {
@@ -39,20 +38,20 @@ namespace SettlementServiceWebAPI.Services
                 startTime = startTime.AddHours(BOOKING_DURATION_HOURS);
             }
 
-            return slots;
+            return await Task.FromResult(slots);
         }
 
         public async Task<Booking> GetBookingByNameAsync(string name)
         {
-            var booking = await _context.Bookings
-                .FirstOrDefaultAsync(b => b.Name.ToLower() == name.ToLower());
+            var booking = _store.Bookings
+                .FirstOrDefault(b => b.Name.ToLower() == name.ToLower());
 
             if (booking == null)
             {
                 throw new KeyNotFoundException($"No booking found for {name}");
             }
 
-            return booking;
+            return await Task.FromResult(booking);
         }
 
         public async Task<BookingResponse> CreateBookingAsync(BookingRequest request)
@@ -66,16 +65,15 @@ namespace SettlementServiceWebAPI.Services
             var bookingTime = TimeOnly.Parse(request.BookingTime);
 
             // Disallow multiple bookings by same person
-            var existingBooking = await _context.Bookings
-                .FirstOrDefaultAsync(b => b.Name.ToLower() == request.Name.ToLower());
+            var existingBooking = _store.Bookings.FirstOrDefault(b => b.Name.ToLower() == request.Name.ToLower());
 
             if (existingBooking != null)
             {
                 throw new InvalidOperationException("A booking already exists for this name already.");
             }
 
-            var existingBookingsCount = await _context.Bookings
-                .CountAsync(b => b.BookingTime == bookingTime);
+            var existingBookingsCount = _store.Bookings
+                .Count(b => b.BookingTime == bookingTime);
 
             if (existingBookingsCount >= MAX_CONCURRENT_BOOKINGS)
             {
@@ -89,10 +87,9 @@ namespace SettlementServiceWebAPI.Services
                 Name = request.Name
             };
 
-            _context.Bookings.Add(booking);
-            await _context.SaveChangesAsync();
+            _store.Bookings.Add(booking);
 
-            return new BookingResponse { BookingId = booking.BookingId };
+            return await Task.FromResult(new BookingResponse { BookingId = booking.BookingId });
         }
 
         public async Task<BookingResponse> AmendBookingAsync(string name, string newBookingTime)
@@ -107,8 +104,8 @@ namespace SettlementServiceWebAPI.Services
 
             var newTime = TimeOnly.Parse(newBookingTime);
 
-            var existingBookingsCount = await _context.Bookings
-                .CountAsync(b => b.BookingTime == newTime && b.BookingId != booking.BookingId);
+            var existingBookingsCount = _store.Bookings
+                .Count(b => b.BookingTime == newTime && b.BookingId != booking.BookingId);
 
             if (existingBookingsCount >= MAX_CONCURRENT_BOOKINGS)
             {
@@ -116,17 +113,14 @@ namespace SettlementServiceWebAPI.Services
             }
 
             booking.BookingTime = newTime;
-            await _context.SaveChangesAsync();
 
-            return new BookingResponse { BookingId = booking.BookingId };
+            return await Task.FromResult(new BookingResponse { BookingId = booking.BookingId });
         }
 
         public async Task DeleteBookingAsync(string name)
         {
             var booking = await GetBookingByNameAsync(name);
-
-            _context.Bookings.Remove(booking);
-            await _context.SaveChangesAsync();
+            _store.Bookings.Remove(booking);
         }
     }
 }

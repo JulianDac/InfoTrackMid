@@ -50,7 +50,7 @@ namespace SettlementServiceWebAPI.Tests
         {
             // Arrange
             var client = _factory.CreateClient();
-            var request = new BookingRequest { Name = "John Doe", BookingTime = "09:00" };
+            var request = new BookingRequest { Name = "John Doe", BookingTime = "11:00" };
 
             // Book 4 slots
             for (int i = 0; i < 4; i++)
@@ -78,7 +78,7 @@ namespace SettlementServiceWebAPI.Tests
             response.EnsureSuccessStatusCode();
             var slots = await response.Content.ReadFromJsonAsync<List<TimeSlot>>();
             Assert.NotNull(slots);
-            Assert.Equal(7, slots.Count); // Assuming 7 slots (9:00 to 16:00, excluding 12:00)
+            Assert.Equal(8, slots.Count); // Assuming 7 slots (9:00 to 16:00, excluding 12:00)
             Assert.All(slots, slot => Assert.True(slot.IsAvailable));
         }
 
