@@ -50,6 +50,7 @@ CREATE TABLE Bookings (
     Name NVARCHAR(MAX) NOT NULL
 );
 GO
+
 3. Check appsettings.json to ensure it's pointing to the right database.
 
 Option 2: Use docker-compose
