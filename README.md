@@ -3,25 +3,36 @@
 A company, InfoTrack, offers a settlement service where a property purchaser's conveyancer meets with representatives of the mortgage provider and the vendor's conveyancer at a pre-arranged time. Due to fixed capacity, InfoTrack can only accommodate a limited number of simultaneous settlements. This API allows users to book a settlement time and receive a response indicating whether the reservation was successful.
 
 ## Functionalities
-Single-Day bookings: All bookings are assumed to be for the same day. No Date is available.
-Business Hours: Operates from 9:00 AM to 5:00 PM. Latest booking must be 4:00 PM.
-Booking Duration: 1 hour.
-Simultaneous Settlements: 4 concurrent bookings allowed in a single hour.
-Booking Request format: The API accepts GET, POST, PUT, DELETE. The POST request, i.e. making a booking, follows the following format
-{
-  "bookingTime": "09:30",
-  "name": "John Smith"
-}
+
+- **Single-Day bookings**: All bookings are assumed to be for the same day. No Date is available.
+
+- **Business Hours**: Operates from 9:00 AM to 5:00 PM. Latest booking must be 4:00 PM.
+
+- **Booking Duration**: 1 hour.
+
+- **Simultaneous Settlements**: 4 concurrent bookings allowed in a single hour.
+
+- **Booking Request format**: The API accepts GET, POST, PUT, DELETE. The POST request, i.e. making a booking, follows the following format:
+
+  ```json
+  {
+    "bookingTime": "09:30",
+    "name": "John Smith"
+  }```
+
 and the success response will return a booking ID in GUID
+  ```json
 {
   "bookingId": "d90f8c55-90a5-4537-a99d-c68242a6012b"
 }
-Out of Hours Request: a Bad Request status will be returned
-Invalid Data Requests: Requests with invalid data return a Bad Request status.
-Fully Booked Times: Requests for times when all settlement slots are reserved return a Conflict status. For example, there can never be a 5th booking in the same hour slot.
-Name Validation: The name property must be a non-empty string.
-Time Validation: The bookingTime property must be in 24-hour format (00:00 - 23:59).
-Storage: Bookings are stored in database.
+```
+
+- **Out of Hours Request: A Bad Request status will be returned.
+- **Invalid Data Requests: Requests with invalid data return a Bad Request status.
+- **Fully Booked Times: Requests for times when all settlement slots are reserved return a Conflict status. For example, there can never be a 5th booking in the same hour slot.
+- **Name Validation: The name property must be a non-empty string.
+- **Time Validation: The bookingTime property must be in 24-hour format (00:00 - 23:59).
+- **Storage: Bookings are stored in the database.
 
 ## Set up Database
 Option 1: Local SQL Server instance
