@@ -1,0 +1,12 @@
+CREATE DATABASE InfoTrack;
+GO
+
+USE InfoTrack;
+GO
+
+CREATE TABLE Bookings (
+    BookingId UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+    BookingTime TIME NOT NULL,
+    Name NVARCHAR(MAX) NOT NULL
+);
+GO
