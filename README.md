@@ -39,6 +39,7 @@ and the success response will return a booking ID in GUID
 Option 1: Local SQL Server instance
 1. Download SQL Server and SSMS
 2. Run the following script to create the InfoTrack Database and Bookings table.
+```sql
 CREATE DATABASE InfoTrack;
 GO
 
@@ -51,6 +52,7 @@ CREATE TABLE Bookings (
     Name NVARCHAR(MAX) NOT NULL
 );
 GO
+```
 
 3. Check appsettings.json to ensure it's pointing to the right database.
 
