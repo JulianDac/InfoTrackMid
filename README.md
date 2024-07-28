@@ -82,3 +82,14 @@ There is a Dockerfile. It can be used together with either database methods abov
 4. BookingService and IBookingService implement service layer pattern
 5. Separating models for Booking, BookingRequest, and BookingResponse
 6. JWT Authentication: this feature is incomplete for now
+
+## To test Make bookings and other functions In SWAGGER
+1. Simply test out the POST/Booking by adding in a time and a person's name and Execute
+![image](https://github.com/user-attachments/assets/66f8126f-63ed-411d-a6ab-b44df47d270e)
+
+2. Get available time slots will return all the possible time slots that can be booked
+![image](https://github.com/user-attachments/assets/23ecbb19-e25e-4e5e-a6b8-c362ca89acdc)
+
+3. Other API calls such as PUT and DELETE will also work as intended
+
+
