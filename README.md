@@ -18,14 +18,15 @@ A company, InfoTrack, offers a settlement service where a property purchaser's c
   {
     "bookingTime": "09:30",
     "name": "John Smith"
-  }```
+  }
+  ```
 
 and the success response will return a booking ID in GUID
   ```json
-{
-  "bookingId": "d90f8c55-90a5-4537-a99d-c68242a6012b"
-}
-```
+  {
+    "bookingId": "d90f8c55-90a5-4537-a99d-c68242a6012b"
+  }
+  ```
 
 - **Out of Hours Request: A Bad Request status will be returned.
 - **Invalid Data Requests: Requests with invalid data return a Bad Request status.
